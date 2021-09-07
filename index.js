@@ -60,7 +60,7 @@ function getAccessToken(oAuth2Client, callback) {
 
 function listFiles(auth) {
   const drive = google.drive({ version: "v3", auth });
-  var fileId = "1YArmFimyxjlRQmakdpyu7W3RMeVlZBY7qhwwl_K7mRc"; // 1IN8FjEjJ9KaE2Slyml1eT9jRZX0JSMSH
+  var fileId = "1YArmFimyxjlRQmakdpyu7W3RMeVlZBY7qhwwl_K7mRc"; // 1IN8FjEjJ9KaE2Slyml1eT9jRZX0JSMSH | 1YArmFimyxjlRQmakdpyu7W3RMeVlZBY7qhwwl_K7mRc
   var dest = fs.createWriteStream("resume.zip");
 
   drive.files.export(
@@ -73,32 +73,18 @@ function listFiles(auth) {
       responseType: "stream",
     },
     (err, res) => {
-      res.data
-        .on("error", (err) => {
-          //   done(err);
-        })
-        .on("end", () => {
-          //   done();
-        })
-        .pipe(dest);
+      if (err) {
+        console.log("ERROR");
+      } else {
+        res.data
+          .on("error", (err) => {
+            //   done(err);
+          })
+          .on("end", () => {
+            //   done();
+          })
+          .pipe(dest);
+      }
     }
   );
-
-  //   drive.files.get(
-  //     {
-  //       fileId: fileId,
-  //       alt: "media",
-  //     },
-  //     { responseType: "stream" },
-  //     (err, res) => {
-  //       res.data
-  //         .on("end", () => {
-  //           //   resolve("resume.pdf");
-  //         })
-  //         .on("error", (err) => {
-  //           //   reject("Error");
-  //         })
-  //         .pipe(dest);
-  //     }
-  //   );
 }
