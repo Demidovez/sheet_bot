@@ -9,6 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "googleapis": "39"
+    "decompress-zip": "^0.3.3",
+    "googleapis": "39",
+    "pdf-poppler": "^0.2.1",
+    "pdf2pic": "^2.1.4",
+    "puppeteer": "^10.2.0",
+    "unzipper": "^0.10.11"
   }
 }

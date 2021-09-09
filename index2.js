@@ -1,78 +1,24 @@
 const fs = require("fs");
-const readline = require("readline");
-const { google } = require("googleapis");
+const puppeteer = require("puppeteer");
+const ZIP_OUT = "html_sheets";
 
-const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
-const TOKEN_PATH = "token2.json";
-
-fs.readFile("credentials2.json", (err, content) => {
-  if (err) return console.log("Error loading client secret file:", err);
-  authorize(JSON.parse(content), listMajors);
-});
-
-function authorize(credentials, callback) {
-  const { client_secret, client_id, redirect_uris } = credentials.web;
-  const oAuth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
-  );
-
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
+(async () => {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      "--user-data-dir=C:\\Users\\demidovez\\AppData\\Local\\Google\\Chrome\\User Data",
+    ],
   });
-}
-
-function getNewToken(oAuth2Client, callback) {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: "offline",
-    scope: SCOPES,
+  const page = await browser.newPage();
+  await page.setViewport({
+    width: 960,
+    height: 760,
+    deviceScaleFactor: 1,
   });
-  console.log("Authorize this app by visiting this url:", authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question("Enter the code from that page here: ", (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err)
-        return console.error(
-          "Error while trying to retrieve access token",
-          err
-        );
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
-        console.log("Token stored to", TOKEN_PATH);
-      });
-      callback(oAuth2Client);
-    });
-  });
-}
-
-function listMajors(auth) {
-  const sheets = google.sheets({ version: "v4", auth });
-  sheets.spreadsheets.values.get(
-    {
-      spreadsheetId: "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms",
-      range: "Class Data!A2:E",
-    },
-    (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
-      const rows = res.data.values;
-      if (rows.length) {
-        console.log("Name, Major:");
-        rows.map((row) => {
-          console.log(`${row[0]}, ${row[4]}`);
-        });
-      } else {
-        console.log("No data found.");
-      }
-    }
-  );
-}
+  await page.setContent(fs.readFileSync(ZIP_OUT + "/Статистика.html", "utf8"));
+  //   await page.goto(
+  //     "https://docs.google.com/spreadsheets/d/1IN8FjEjJ9KaE2Slyml1eT9jRZX0JSMSH/edit#gid=1273244682"
+  //   );
+  await page.screenshot({ path: "example2.png" });
+  await browser.close();
+})();
