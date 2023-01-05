@@ -65,7 +65,7 @@ function getAccessToken(oAuth2Client, callback) {
 
 function listFiles(auth) {
   const drive = google.drive({ version: "v3", auth });
-  var fileId = "1aGVK8_mIj1uNUcYfIFS3BvWuvO-pEUPojsrP6C7V7wM"; // 1IN8FjEjJ9KaE2Slyml1eT9jRZX0JSMSH | 1YArmFimyxjlRQmakdpyu7W3RMeVlZBY7qhwwl_K7mRc
+  var fileId = "1aGVK8_mIj1uNUcfaYfIFS3BvWuvO-pEUPojsrP6C7V7wM"; // 1IN8FjEjJ9KaadE2Slyml1eT9jRZX0JSMSH | 1YArmFimyxjlRQmakaadpyu7W3RMeVlZBY7qhwwl_K7mRc
   var dest = fs.createWriteStream(ZIP_NAME);
 
   const createZip = new Promise((resolve, reject) => {
@@ -120,48 +120,4 @@ function listFiles(auth) {
         console.log("an error has occurred in the pdf converter " + err);
       });
   });
-
-  // createZip
-  //   .then(async () => {
-  //     const unzipping = new Promise((resolve, reject) => {
-  //       let unzipper = new DecompressZip(ZIP_NAME);
-
-  //       unzipper.extract({
-  //         path: ZIP_OUT,
-  //       });
-
-  //       unzipper.on("error", function (err) {
-  //         console.log(err);
-  //         reject();
-  //       });
-
-  //       unzipper.on("extract", function (log) {
-  //         console.log("log es", log);
-  //         resolve();
-  //       });
-
-  //       unzipper.on("progress", function (fileIndex, fileCount) {
-  //         console.log("Extracted file " + (fileIndex + 1) + " of " + fileCount);
-  //       });
-  //     });
-
-  //     return unzipping;
-  //   })
-  //   .then(async () => {
-  //     const browser = await puppeteer.launch();
-  //     const page = await browser.newPage();
-  //     await page.setViewport({
-  //       width: 960,
-  //       height: 760,
-  //       deviceScaleFactor: 1,
-  //     });
-  //     // await page.setContent(
-  //     //   fs.readFileSync(ZIP_OUT + "/Статистика.html", "utf8")
-  //     // );
-  //     await page.goto(
-  //       "https://docs.google.com/spreadsheets/d/1IN8FjEjJ9KaE2Slyml1eT9jRZX0JSMSH/edit#gid=1273244682"
-  //     );
-  //     await page.screenshot({ path: "example.png" });
-  //     await browser.close();
-  //   });
 }
